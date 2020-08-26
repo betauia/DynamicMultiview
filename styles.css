@@ -1,10 +1,11 @@
 .flex-grid {
 	display: flex;
 	flex-wrap: wrap;
+	align-content: flex-start;
 }
 
 .col {
 	width: 640px;
 	height: 360px;
-	padding: 10px;
+	padding: 5px;
 }
