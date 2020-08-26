@@ -1,6 +1,7 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="styles.css" />
 	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+	<script src="./volume-meter.js"></script>
 </head>
 
 <body class="flex-grid"></body>
@@ -29,7 +30,41 @@
 			video.play();
 		});
 
-		document.body.appendChild(video);
+		const cv = document.createElement('canvas');
+		cv.className = 'audioMeter';
+		cv.width = 640;
+		cv.height = 20;
+
+		const context = cv.getContext('2d');
+		const audioCtx = new window.AudioContext();
+		const sourceNode = audioCtx.createMediaElementSource(video);
+		const meter = createAudioMeter(audioCtx);
+		sourceNode.connect(meter);
+
+		const onLevelChange = time => {
+			context.clearRect(0, 0, 640, 200);
+
+			if (meter.checkClipping()) {
+				context.fillStyle = 'red';
+			} else {
+				context.fillStyle = 'green';
+			}
+
+			context.fillRect(0, 0, meter.volume * 640, 200);
+			window.requestAnimationFrame(onLevelChange);
+		};
+		onLevelChange();
+
+		const container = document.createElement('div');
+		const title = document.createElement('div');
+		title.className = 'title';
+		title.innerHTML = courseCode;
+
+		container.appendChild(title);
+		container.appendChild(video);
+		container.appendChild(cv);
+
+		document.body.appendChild(container);
 	};
 
 	const isLive = async courseCode => {
@@ -56,7 +91,7 @@
 		if (!currentCourses.every(val => liveCourses.includes(val))) {
 			liveCourses = currentCourses;
 
-			document.body.innerHTML = '';
+			//document.body.innerHTML = '';
 			liveCourses.map(courseCode => spawnStream(courseCode));
 		}
 

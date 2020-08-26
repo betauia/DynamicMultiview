@@ -8,4 +8,17 @@
 	width: 640px;
 	height: 360px;
 	padding: 5px;
+	display: block;
+}
+
+.audioMeter {
+	width: 640px;
+	height: 20px;
+	padding: 5px;
+}
+
+.title {
+	padding: 5px;
+	font-family: sans-serif;
+	font-weight: bold;
 }
