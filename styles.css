@@ -5,5 +5,6 @@
 
 .col {
 	width: 640px;
-	height: 480px;
+	height: 360px;
+	padding: 10px;
 }

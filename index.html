@@ -1,50 +1,33 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="styles.css" />
+	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
-<body class="flex-grid"></body>
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<body class="flex-grid"></body>
 
 <script type="text/javascript">
 	const DEFAULT_TEXT = '#EXTM3U\n#EXT-X-VERSION:3\n';
 
 	const REFRESH_INTERVAL = 10; // seconds
 	let liveCourses = [];
-	let courses = [
-		'beta',
-		'beta',
-		'beta',
-		'beta',
-		'beta',
-		'beta',
-		'beta',
-		'beta',
-	];
+	let courses = ['beta', 'beta', 'beta', 'beta'];
 
 	const spawnStream = courseCode => {
 		const video = document.createElement('video');
-		const divId = Math.random().toString(36).substr(2, 9);
+		video.className = 'col';
+		video.setAttribute('controls', true);
 
 		const videoSrc =
 			'https://live.uia.no/live/ngrp:' +
 			courseCode +
 			'_all/playlist.m3u8';
 
-		video.className = 'col';
-
-		if (Hls.isSupported()) {
-			var hls = new Hls();
-			hls.loadSource(videoSrc);
-			hls.attachMedia(video);
-			hls.on(Hls.Events.MANIFEST_PARSED, function () {
-				video.play();
-			});
-		} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-			video.src = videoSrc;
-			video.addEventListener('loadedmetadata', function () {
-				video.play();
-			});
-		}
+		const hls = new Hls();
+		hls.loadSource(videoSrc);
+		hls.attachMedia(video);
+		hls.on(Hls.Events.MANIFEST_PARSED, () => {
+			video.play();
+		});
 
 		document.body.appendChild(video);
 	};
@@ -75,6 +58,10 @@
 
 			document.body.innerHTML = '';
 			liveCourses.map(courseCode => spawnStream(courseCode));
+		}
+
+		if (liveCourses.length === 0) {
+			document.body.innerHTML = 'No streams live at the moment';
 		}
 
 		setTimeout(async () => {
