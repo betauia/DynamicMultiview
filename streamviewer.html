@@ -1,0 +1,80 @@
+<head>
+	<link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+<body class="flex-grid"></body>
+
+<script
+	type="text/javascript"
+	src="//player.wowza.com/player/latest/wowzaplayer.min.js"
+></script>
+
+<script type="text/javascript">
+	const DEFAULT_TEXT = '#EXTM3U\n#EXT-X-VERSION:3\n';
+
+	const REFRESH_INTERVAL = 10; // seconds
+	let liveCourses = [];
+	let courses = ['org221', 'dat233', 'dat234'];
+
+	const spawnStream = courseCode => {
+		const playerDiv = document.createElement('div');
+		const divId = Math.random().toString(36).substr(2, 9);
+
+		playerDiv.setAttribute('id', divId);
+		playerDiv.className = 'col';
+		playerDiv.innerHTML = 'gg';
+
+		document.body.appendChild(playerDiv);
+
+		WowzaPlayer.create(divId, {
+			license: 'PLAY1-6MRXX-CkGy8-6Ydt3-hvQ99-8wHQY',
+			title: courseCode,
+			sourceURL:
+				'https://live.uia.no/live/ngrp:' +
+				courseCode +
+				'_all/playlist.m3u8?DVR',
+			autoPlay: true,
+			volume: '75',
+			mute: false,
+			loop: false,
+			audioOnly: false,
+			uiShowQuickRewind: true,
+			uiQuickRewindSeconds: '30',
+			uiPosterFrameFillMode: 'fill',
+		});
+	};
+
+	const isLive = async courseCode => {
+		const resp = await fetch(
+			`https://live.uia.no/live/ngrp:${courseCode}_all/playlist.m3u8`
+		);
+		const blob = await resp.blob();
+		const text = await blob.text();
+
+		return text !== DEFAULT_TEXT;
+	};
+
+	const checkStreams = async () => {
+		let currentCourses = [];
+
+		await Promise.all(
+			courses.map(async courseCode => {
+				if (await isLive(courseCode)) {
+					currentCourses.push(courseCode);
+				}
+			})
+		);
+
+		if (!currentCourses.every(val => liveCourses.includes(val))) {
+			liveCourses = currentCourses;
+
+			document.body.innerHTML = '';
+			liveCourses.map(courseCode => spawnStream(courseCode));
+		}
+
+		setTimeout(async () => {
+			await checkStreams();
+		}, REFRESH_INTERVAL * 1000);
+	};
+
+	checkStreams();
+</script>
