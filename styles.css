@@ -7,12 +7,3 @@
 	width: 640px;
 	height: 480px;
 }
-
-[id*='-Video'] {
-	width: 100%;
-	height: 100%;
-}
-[id*='-Container'] {
-	width: 640px;
-	height: 480px;
-}
