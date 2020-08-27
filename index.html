@@ -55,11 +55,28 @@
 		};
 		onLevelChange();
 
-		const container = document.createElement('div');
+		const muteButton = document.createElement('button');
+		muteButton.className = 'muteButton';
+		muteButton.innerHTML = 'unmute';
+		let muted = true;
+		muteButton.addEventListener('click', () => {
+			if (muted) {
+				sourceNode.connect(audioCtx.destination);
+				muted = false;
+				muteButton.innerHTML = 'mute';
+			} else {
+				sourceNode.disconnect(audioCtx.destination);
+				muted = true;
+				muteButton.innerHTML = 'unmute';
+			}
+		});
+
 		const title = document.createElement('div');
 		title.className = 'title';
 		title.innerHTML = courseCode;
+		title.appendChild(muteButton);
 
+		const container = document.createElement('div');
 		container.appendChild(title);
 		container.appendChild(video);
 		container.appendChild(cv);
