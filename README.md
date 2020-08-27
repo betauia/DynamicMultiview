@@ -1,5 +1,7 @@
 # DynamicMultiview
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7ec1439b-8390-4f58-a409-44013275f17f/deploy-status)](https://app.netlify.com/sites/goofy-torvalds-1816e2/deploys)
 > Site to actively look for active streams at UiA.
+
 
 # What
 Meant as an inhouse tool for https://www.uia.no/om-uia/media/it-avdelingens-mediesenter. (Grimstad)
