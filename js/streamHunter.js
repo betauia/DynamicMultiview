@@ -2,8 +2,7 @@ const DEFAULT_TEXT = '#EXTM3U\n#EXT-X-VERSION:3\n';
 
 const REFRESH_INTERVAL = 10; // seconds
 let liveCourses = [];
-let courses = ['beta', 'beta', 'beta', 'beta'];
-
+let courses = ['beta', 'beta', 'beta', 'beta', 'ikt440', 'dat235'];
 const spawnStream = courseCode => {
     const video = document.createElement('video');
     video.className = 'col';
